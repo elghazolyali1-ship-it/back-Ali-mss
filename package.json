@@ -1,0 +1,9 @@
+{
+  "name": "wedding-rsvp-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Small serverless API (Vercel) that saves wedding RSVP responses to MongoDB",
+  "dependencies": {
+    "mongodb": "^6.9.0"
+  }
+}

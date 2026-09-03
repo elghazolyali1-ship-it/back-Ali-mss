@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ردود تأكيد الحضور</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#3a2c26;
+    --muted:#8a7a6f;
+    --line:#e7dccf;
+    --paper:#fffaf8;
+    --bg:#f6f1e8;
+    --wine:#5a0f1b;
+    --wine-dark:#42090f;
+    --gold:#a9812f;
+    --green:#3f6b45;
+    --green-bg:#eef4ee;
+    --red:#8c3a34;
+    --red-bg:#f6ecea;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #fbf3e6 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    padding:32px 16px 80px;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+
+  header{
+    text-align:center;
+    margin-bottom:32px;
+  }
+  header .eyebrow{
+    letter-spacing:.08em;
+    color:var(--gold);
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+  }
+  header h1{
+    font-family:'Cormorant Garamond', serif;
+    font-size:40px;
+    font-weight:700;
+    margin:6px 0 4px;
+    color:var(--wine-dark);
+  }
+  header p{
+    color:var(--muted);
+    margin:0;
+    font-size:14px;
+  }
+
+  /* ---- gate ---- */
+  .gate{
+    max-width:380px;
+    margin:60px auto 0;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:32px 28px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(90,15,27,.06);
+  }
+  .gate p{color:var(--muted);font-size:14px;margin:0 0 18px;}
+  .gate input{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-family:inherit;
+    font-size:15px;
+    margin-bottom:12px;
+    background:#fff;
+    color:var(--ink);
+    text-align:center;
+  }
+  .gate input:focus{outline:none;border-color:var(--gold);}
+  .btn{
+    display:inline-block;
+    width:100%;
+    padding:12px 14px;
+    border:none;
+    border-radius:10px;
+    background:var(--wine);
+    color:#f6f1e8;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    transition:background .2s ease;
+  }
+  .btn:hover{background:var(--wine-dark);}
+  .btn.secondary{
+    background:transparent;
+    color:var(--wine);
+    border:1px solid var(--wine);
+    width:auto;
+    padding:9px 16px;
+    font-size:13px;
+  }
+  .btn.secondary:hover{background:var(--wine);color:#fff;}
+  .error-msg{color:var(--red);font-size:13px;margin-top:10px;display:none;}
+
+  /* ---- stats ---- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-bottom:24px;
+  }
+  .stat{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 10px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:'Cormorant Garamond', serif;
+    font-size:34px;
+    font-weight:700;
+    color:var(--wine-dark);
+    line-height:1;
+  }
+  .stat .lbl{
+    font-size:12.5px;
+    color:var(--muted);
+    margin-top:6px;
+  }
+  .stat.confirmed .num{color:var(--green);}
+  .stat.declined .num{color:var(--red);}
+
+  /* ---- toolbar ---- */
+  .toolbar{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .toolbar input[type="search"]{
+    flex:1;
+    min-width:180px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-family:inherit;
+    font-size:14px;
+    background:var(--paper);
+  }
+  .toolbar input[type="search"]:focus{outline:none;border-color:var(--gold);}
+
+  /* ---- list ---- */
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(90,15,27,.05);
+  }
+  table{width:100%;border-collapse:collapse;}
+  thead th{
+    text-align:right;
+    font-size:12.5px;
+    color:var(--muted);
+    font-weight:700;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    background:#faf5ee;
+  }
+  tbody td{
+    padding:14px 18px;
+    font-size:14px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#fbf6ef;}
+  .name{font-weight:700;color:var(--ink);}
+  .msg{color:var(--muted);font-size:13.5px;max-width:260px;}
+  .date{color:var(--muted);font-size:12.5px;white-space:nowrap;}
+  .badge{
+    display:inline-block;
+    padding:4px 12px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .badge.yes{background:var(--green-bg);color:var(--green);}
+  .badge.no{background:var(--red-bg);color:var(--red);}
+
+  .empty, .loading{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+    font-size:14px;
+  }
+
+  footer.actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:18px;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .muted-link{
+    background:none;border:none;color:var(--muted);font-size:12.5px;
+    cursor:pointer;text-decoration:underline;font-family:inherit;
+  }
+
+  @media (max-width:560px){
+    .stats{grid-template-columns:1fr 1fr;}
+    thead{display:none;}
+    table, tbody, tr, td{display:block;width:100%;}
+    tbody tr{padding:14px 18px;border-bottom:1px solid var(--line);}
+    tbody td{border:none;padding:4px 0;}
+    .msg{max-width:none;}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Wedding RSVP</div>
+      <h1>ردود تأكيد الحضور</h1>
+      <p id="subhead">لوحة متابعة ردود المدعوين</p>
+    </header>
+
+    <div id="gate" class="gate">
+      <p>أدخل كلمة المرور لعرض الردود</p>
+      <input type="password" id="keyInput" placeholder="كلمة المرور" autocomplete="off" />
+      <button class="btn" id="unlockBtn">عرض الردود</button>
+      <div class="error-msg" id="gateError">كلمة المرور غير صحيحة</div>
+    </div>
+
+    <div id="dashboard" style="display:none;">
+      <div class="stats">
+        <div class="stat">
+          <div class="num" id="statTotal">0</div>
+          <div class="lbl">إجمالي الردود</div>
+        </div>
+        <div class="stat confirmed">
+          <div class="num" id="statYes">0</div>
+          <div class="lbl">مؤكدون الحضور</div>
+        </div>
+        <div class="stat declined">
+          <div class="num" id="statNo">0</div>
+          <div class="lbl">اعتذروا</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input type="search" id="searchInput" placeholder="ابحث بالاسم..." />
+        <button class="btn secondary" id="refreshBtn">تحديث</button>
+        <button class="btn secondary" id="exportBtn">تصدير CSV</button>
+      </div>
+
+      <div class="card">
+        <div id="loading" class="loading">جارِ تحميل الردود...</div>
+        <table id="table" style="display:none;">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>الحضور</th>
+              <th>الرسالة</th>
+              <th>التاريخ</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div id="emptyState" class="empty" style="display:none;">لا توجد ردود حتى الآن</div>
+      </div>
+
+      <footer class="actions">
+        <span></span>
+        <button class="muted-link" id="lockBtn">تسجيل الخروج</button>
+      </footer>
+    </div>
+  </div>
+
+<script>
+(function () {
+  var API_URL = "/api/rsvp"; // نفس الدومين، مفيش داعي تغيّره لو الصفحة دي على نفس مشروع Vercel
+
+  var gate = document.getElementById('gate');
+  var dashboard = document.getElementById('dashboard');
+  var keyInput = document.getElementById('keyInput');
+  var unlockBtn = document.getElementById('unlockBtn');
+  var gateError = document.getElementById('gateError');
+  var loading = document.getElementById('loading');
+  var table = document.getElementById('table');
+  var tbody = document.getElementById('tbody');
+  var emptyState = document.getElementById('emptyState');
+  var searchInput = document.getElementById('searchInput');
+  var refreshBtn = document.getElementById('refreshBtn');
+  var exportBtn = document.getElementById('exportBtn');
+  var lockBtn = document.getElementById('lockBtn');
+
+  var allResults = [];
+  var STORAGE_KEY = 'rsvp_admin_key';
+
+  function formatDate(iso) {
+    try {
+      var d = new Date(iso);
+      return d.toLocaleString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch (e) {
+      return iso || '';
+    }
+  }
+
+  function isConfirmed(attending) {
+    return /نعم|أؤكد|accept|yes/i.test(attending || '');
+  }
+
+  function render(list) {
+    var yes = 0, no = 0;
+    list.forEach(function (r) { isConfirmed(r.attending) ? yes++ : no++; });
+
+    document.getElementById('statTotal').textContent = list.length;
+    document.getElementById('statYes').textContent = yes;
+    document.getElementById('statNo').textContent = no;
+
+    tbody.innerHTML = '';
+    if (!list.length) {
+      table.style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+    table.style.display = 'table';
+
+    list.forEach(function (r) {
+      var tr = document.createElement('tr');
+      var confirmed = isConfirmed(r.attending);
+      tr.innerHTML =
+        '<td class="name">' + escapeHtml(r.name || '') + '</td>' +
+        '<td><span class="badge ' + (confirmed ? 'yes' : 'no') + '">' + escapeHtml(r.attending || '') + '</span></td>' +
+        '<td class="msg">' + (r.message ? escapeHtml(r.message) : '—') + '</td>' +
+        '<td class="date">' + formatDate(r.createdAt) + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function applyFilter() {
+    var q = (searchInput.value || '').trim();
+    if (!q) { render(allResults); return; }
+    var filtered = allResults.filter(function (r) {
+      return (r.name || '').indexOf(q) !== -1;
+    });
+    render(filtered);
+  }
+
+  function fetchResults(key) {
+    loading.style.display = 'block';
+    table.style.display = 'none';
+    emptyState.style.display = 'none';
+
+    fetch(API_URL + '?key=' + encodeURIComponent(key))
+      .then(function (res) {
+        if (res.status === 401) throw new Error('unauthorized');
+        if (!res.ok) throw new Error('server error');
+        return res.json();
+      })
+      .then(function (data) {
+        allResults = data.results || [];
+        gate.style.display = 'none';
+        dashboard.style.display = 'block';
+        loading.style.display = 'none';
+        sessionStorage.setItem(STORAGE_KEY, key);
+        render(allResults);
+      })
+      .catch(function (err) {
+        loading.style.display = 'none';
+        sessionStorage.removeItem(STORAGE_KEY);
+        gate.style.display = 'block';
+        dashboard.style.display = 'none';
+        gateError.style.display = 'block';
+        gateError.textContent = err.message === 'unauthorized'
+          ? 'كلمة المرور غير صحيحة'
+          : 'حدث خطأ، حاول تاني';
+      });
+  }
+
+  function exportCsv() {
+    var rows = [['الاسم', 'الحضور', 'الرسالة', 'التاريخ']];
+    allResults.forEach(function (r) {
+      rows.push([r.name || '', r.attending || '', r.message || '', formatDate(r.createdAt)]);
+    });
+    var csv = rows.map(function (row) {
+      return row.map(function (cell) {
+        return '"' + String(cell).replace(/"/g, '""') + '"';
+      }).join(',');
+    }).join('\n');
+    var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'rsvp-responses.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  unlockBtn.addEventListener('click', function () {
+    gateError.style.display = 'none';
+    var key = keyInput.value.trim();
+    if (!key) return;
+    fetchResults(key);
+  });
+
+  keyInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') unlockBtn.click();
+  });
+
+  refreshBtn.addEventListener('click', function () {
+    var key = sessionStorage.getItem(STORAGE_KEY);
+    if (key) fetchResults(key);
+  });
+
+  exportBtn.addEventListener('click', exportCsv);
+
+  lockBtn.addEventListener('click', function () {
+    sessionStorage.removeItem(STORAGE_KEY);
+    dashboard.style.display = 'none';
+    gate.style.display = 'block';
+    keyInput.value = '';
+    keyInput.focus();
+  });
+
+  searchInput.addEventListener('input', applyFilter);
+
+  // auto-login if a key was already entered this session
+  var savedKey = sessionStorage.getItem(STORAGE_KEY);
+  if (savedKey) {
+    keyInput.value = savedKey;
+    fetchResults(savedKey);
+  }
+})();
+</script>
+</body>
+</html>
